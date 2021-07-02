@@ -87,3 +87,4 @@ from dual;
 select  nvl(commission_pct,0),
         nvl2(commission_pct, 'true', 'false')
 from employees;
+
