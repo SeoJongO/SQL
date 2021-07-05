@@ -56,12 +56,41 @@ where (department_id, salary) in (select department_id, max(salary)
 order by salary desc;
 
 -- 문제6
-select  j.job_title
-from jobs j
-group by job_title;
+SELECT J.JOB_TITLE, SUM(E.SALARY)
+FROM JOBS J, EMPLOYEES E
+WHERE E.JOB_ID = J.JOB_ID
+GROUP BY J.JOB_TITLE
+ORDER BY SUM(E.SALARY) DESC;
 
-select  j.job_title,
-        
-from employees e, jobs j
-where e.job_id = j.job_id
-group by j.job_title, e.salary*12;
+-- 문제7
+-- 자신의 부서 평균 급여보다 연봉(salary)이 많은 직원의 직원번호(employee_id), 이름(first_name)과 급여(salary)을 조회하세요
+select employee_id, first_name, salary
+from employees e, (select department_id, avg(salary) avs
+                   from employees
+                   group by department_id) a
+where e.department_id = a.department_id
+and e.salary > avs;
+                                  
+select department_id, avg(salary)
+from employees
+group by department_id;
+                   
+-- 문제8
+select  rn,
+        s.employee_id,
+        s.first_name,
+        s.salary,
+        s.hire_date
+from (select rownum rn,
+        f.employee_id,
+        f.first_name,
+        f.salary,
+        f.hire_date
+ from (select employee_id,
+                first_name,
+                salary,
+                hire_date
+         from employees
+         order by hire_date asc)f)s
+where rn >= 11
+and rn <= 15;
